@@ -6,14 +6,14 @@ def input_students
   while true do
     hash = {cohort: default_cohort}
     puts "Please enter a student name, or to finish, hit return."
-    name = gets.chomp
+    name = gets.delete "\n"
     if name.empty?
       break
     end
     hash[:name] = name
     additional_info.each do |info|
       puts "Please specify #{info.to_s} for #{name}."
-      input = gets.chomp
+      input = gets.delete "\n"
       if info == :cohort
         while true do
           if input.empty?
@@ -22,11 +22,11 @@ def input_students
             break
           end
           if $valid_cohorts.any? {|x| x == input.downcase.to_sym}
-            hash[info] = input.to_sym
+            hash[info] = input.downcase.to_sym
             break
           else
             puts "That is not a valid cohort name.  Please try again, or hit return for the default cohort."
-            input = gets.chomp
+            input = gets.delete "\n"
           end
         end
       else
@@ -79,7 +79,7 @@ end
 students = input_students
 if students.length > 0
   puts "Would you like to specify a first letter?  If so, type the letter, otherwise hit return."
-  $letter = gets.chomp
+  $letter = gets.delete "\n"
   $report = []
   $count = 0
   print_header
