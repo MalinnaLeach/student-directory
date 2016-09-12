@@ -23,16 +23,19 @@ def print_header
 end
 
 def prints(students)
+  index = 0
   students.each do |student|
-    if (student[:name].split "")[0].downcase == $letter.downcase
+    if ((student[:name].split "")[0].downcase == $letter.downcase) || $letter.empty?
       $report << {name: student[:name], cohort: student[:cohort]}
     end
   end
-  $report.each do |student|
+  until index == $report.length do
+    student = $report[index]
     if student[:name].length < 12
     $count += 1
     puts "#{$count}. #{student[:name]} (#{student[:cohort]} cohort)"
     end
+    index += 1
   end
 end
 
@@ -43,6 +46,8 @@ def print_footer(names)
   end
   if !$letter.empty?
     puts " whose name begins with #{$letter}"
+  else
+    puts
   end
   if $count < $report.length
     print "#{$report.length - $count} student"
