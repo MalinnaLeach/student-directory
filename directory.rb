@@ -37,7 +37,7 @@ def prints(students)
     student = $report[index]
     if student[:name].length < 12
     $count += 1
-    puts "#{$count}. #{student[:name]} (#{student[:cohort]} cohort)"
+    puts "#{$count}. #{student[:name].center(12)} (#{student[:cohort]} cohort)"
     end
     index += 1
   end
