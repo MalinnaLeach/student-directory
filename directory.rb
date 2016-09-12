@@ -1,23 +1,27 @@
 def input_students
-  puts "Please enter the names of the students"
-  puts "To finish, just hit return twice"
-  # create an empty array
   students = []
-  # get the first names
-  name = gets.chomp
-  # while the name is not empty, repeat this code
-  while !name.empty? do
-    # add the student hash to the array
-    students << {name: name, cohort: :november}
-    puts "Now we have #{students.count} students"
-    # get another name from the user
+  additional_info = [:hobbies, :country_of_birth, :height]
+  while true do
+    hash = {}
+    puts "Please enter a student name, or to finish, hit return twice."
     name = gets.chomp
+      if name.empty?
+        break
+      end
+    hash[:name] = name
+    hash[:cohort] = :november
+    additional_info.each do |info|
+      puts "Please specify #{info.to_s} for #{name}."
+      input = gets.chomp
+      hash[info] = input
+    end
+    students << hash
   end
-  # return the array of students
   students
 end
 
 def print_header
+  puts
   puts "The students of Villians Academy"
   puts "-------------"
 end
@@ -45,9 +49,9 @@ def print_footer(names)
     print "s"
   end
   if !$letter.empty?
-    puts " whose name begins with #{$letter}"
+    puts " whose name begins with #{$letter}."
   else
-    puts
+    puts "."
   end
   if $count < $report.length
     print "#{$report.length - $count} student"
@@ -56,15 +60,20 @@ def print_footer(names)
     else
       print " was"
     end
-    puts " not listed as their name is more than 12 characters"
+    puts " not listed as their name is more than 12 characters."
   end
 end
 #nothing happens until we call the methods
+
 students = input_students
-puts "Would you like to specify a first letter?  If so, type the letter, otherwise hit return."
-$letter = gets.chomp
-$report = []
-$count = 0
-print_header
-prints(students)
-print_footer(students)
+if students.length > 0
+  puts "Would you like to specify a first letter?  If so, type the letter, otherwise hit return."
+  $letter = gets.chomp
+  $report = []
+  $count = 0
+  print_header
+  prints(students)
+  print_footer(students)
+else
+  puts "No students have been entered into the system"
+end
