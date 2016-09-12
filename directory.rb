@@ -22,17 +22,26 @@ def print_header
   puts "-------------"
 end
 
-def print(students)
+def prints(students)
   students.each_with_index do |student, index|
-  puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort)"
+    if (student[:name].split "")[0].downcase == $letter.downcase
+      $count +=1
+      puts "#{$count}. #{student[:name]} (#{student[:cohort]} cohort)"
+    end
   end
 end
 
 def print_footer(names)
-  puts "Overall, we have #{names.count} great students"
+  print "Overall, we have #{$count} great students"
+  if !$letter.empty?
+    puts " whose name begins with #{$letter}"
+  end
 end
 #nothing happens until we call the methods
 students = input_students
+puts "Would you like to specify a first letter?  If so, type the letter, otherwise hit return."
+$letter = gets.chomp
+$count = 0
 print_header
-print(students)
+prints(students)
 print_footer(students)
