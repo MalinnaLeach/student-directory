@@ -23,24 +23,42 @@ def print_header
 end
 
 def prints(students)
-  students.each_with_index do |student, index|
+  students.each do |student|
     if (student[:name].split "")[0].downcase == $letter.downcase
-      $count +=1
-      puts "#{$count}. #{student[:name]} (#{student[:cohort]} cohort)"
+      $report << {name: student[:name], cohort: student[:cohort]}
+    end
+  end
+  $report.each do |student|
+    if student[:name].length < 12
+    $count += 1
+    puts "#{$count}. #{student[:name]} (#{student[:cohort]} cohort)"
     end
   end
 end
 
 def print_footer(names)
-  print "Overall, we have #{$count} great students"
+  print "Overall, we have #{$report.length} great student"
+  if $report.length > 1
+    print "s"
+  end
   if !$letter.empty?
     puts " whose name begins with #{$letter}"
+  end
+  if $count < $report.length
+    print "#{$report.length - $count} student"
+    if ($report.length - $count) > 1
+      print "s were"
+    else
+      print " was"
+    end
+    puts " not listed as their name is more than 12 characters"
   end
 end
 #nothing happens until we call the methods
 students = input_students
 puts "Would you like to specify a first letter?  If so, type the letter, otherwise hit return."
 $letter = gets.chomp
+$report = []
 $count = 0
 print_header
 prints(students)
