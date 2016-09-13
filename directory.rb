@@ -1,3 +1,23 @@
+def interactive_menu
+  students = []
+  loop do
+    puts "1. Input the students"
+    puts "2. Show the students"
+    puts "9. Exit"
+    selection = gets.chomp
+    case selection
+    when "1"
+      students = input_students
+    when "2"
+      display_list students
+    when "9"
+      exit
+    else
+      puts "I don't know what you meant, try again"
+    end
+  end
+end
+
 def input_students
   students = []
   additional_info = [:cohort, :hobbies, :country_of_birth, :height]
@@ -76,15 +96,18 @@ def print_footer(names)
   end
 end
 
-students = input_students
-if students.length > 0
-  puts "Would you like to specify a first letter?  If so, type the letter, otherwise hit return."
-  $letter = gets.delete "\n"
-  $report = []
-  $count = 0
-  print_header
-  prints(students)
-  print_footer(students)
-else
-  puts "No students have been entered into the system."
+def display_list students
+  if students.length > 0
+    puts "Would you like to specify a first letter?  If so, type the letter, otherwise hit return."
+    $letter = gets.delete "\n"
+    $report = []
+    $count = 0
+    print_header
+    prints(students)
+    print_footer(students)
+  else
+    puts "No students have been entered into the system."
+  end
 end
+
+interactive_menu
