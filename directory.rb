@@ -4,8 +4,20 @@
 @valid_cohorts = [:january, :february, :march, :april, :may, :june, :july, :august, :september, :october,:november, :december]
 @letter = ""
 
-def load_students
-  file = File.open("students.csv", "r")
+def try_load_students
+  filename = ARGV.first
+  return if filename.nil?
+  if File.exists?(filename)
+    load_students(filename)
+    puts "Loaded #{@students.count} from #{filename}"
+  else
+    puts "Sorry, #{filename} doesn't exist"
+    exit
+  end
+end
+
+def load_students(filename = "students.csv")
+  file = File.open(filename, "r")
   file.readlines.each do |line|
     name, cohort = line.chomp.split(",")
     @students << {name: name, cohort: cohort.to_sym}
@@ -16,7 +28,7 @@ end
 def interactive_menu
   loop do
     print_menu
-    selection = gets.chomp
+    selection = STDIN.gets.chomp
     case selection
       when "1"
         input_students
@@ -49,14 +61,14 @@ def input_students
   while true do
     hash = {cohort: default_cohort}
     puts "Please enter a student name, or to finish, hit return."
-    name = gets.delete "\n"
+    name = STDIN.gets.chomp
     if name.empty?
       break
     end
     hash[:name] = name
     additional_info.each do |info|
       puts "Please specify #{info.to_s} for #{name}."
-      input = gets.delete "\n"
+      input = STDIN.gets.chomp
       if info == :cohort
         while true do
           if input.empty?
@@ -69,7 +81,7 @@ def input_students
             break
           else
             puts "That is not a valid cohort name.  Please try again, or hit return for the default cohort."
-            input = gets.delete "\n"
+            input = STDIN.gets.chomp
           end
         end
       else
@@ -90,6 +102,8 @@ def print_header
 end
 
 def print_student_list
+  @count = 0
+  @report = []
   @students.each do |student|
     if ((student[:name].split "")[0].downcase == @letter.downcase) || @letter.empty?
       @report << {name: student[:name], cohort: student[:cohort]}
@@ -121,7 +135,7 @@ end
 def show_students
   if @students.length > 0
     puts "Would you like to specify a first letter?  If so, type the letter, otherwise hit return."
-    @letter = gets.delete "\n"
+    @letter = STDIN.gets.chomp
     print_header
     print_student_list
     print_footer
@@ -140,4 +154,5 @@ def save_students
   file.close
 end
 
+try_load_students
 interactive_menu
