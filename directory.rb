@@ -3,27 +3,29 @@
 @count = 0
 @valid_cohorts = [:january, :february, :march, :april, :may, :june, :july, :august, :september, :october,:november, :december]
 @letter = ""
+@filename = "students.csv"
 
 def try_load_students
-  filename = ARGV.first
-  return if filename.nil?
-  if File.exists?(filename)
-    load_students(filename)
+  unless ARGV.first.nil?
+    @filename = ARGV.first
+  end
+  if File.exists?(@filename)
+    load_students
   else
-    puts "Sorry, #{filename} doesn't exist"
+    puts "Sorry, #{@filename} doesn't exist"
     exit
   end
 end
 
-def load_students(filename = "students.csv")
-  file = File.open(filename, "r")
+def load_students
+  file = File.open(@filename, "r")
   file.readlines.each do |line|
     name, cohort = line.chomp.split(",")
     hash = {name: name, cohort: cohort.to_sym}
     populate_students hash
-    puts "Loaded #{@students.count} from #{filename}"
   end
   file.close
+  puts "Loaded #{@students.count} students from #{@filename}"
 end
 
 def populate_students hash
@@ -150,7 +152,7 @@ def show_students
 end
 
 def save_students
-  file = File.open("students.csv", "w")
+  file = File.open(@filename, "w")
   @students.each do |student|
     student_data = [student[:name], student[:cohort]]
     csv_line = student_data.join(",")
