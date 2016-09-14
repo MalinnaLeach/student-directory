@@ -24,13 +24,13 @@ def ask_for_file
 end
 
 def load_students
-  file = File.open(@filename, "r")
-  file.readlines.each do |line|
-    name, cohort = line.chomp.split(",")
-    hash = {name: name, cohort: cohort.to_sym}
-    populate_students hash
+  File.open(@filename, "r") do |file|
+    file.readlines.each do |line|
+      name, cohort = line.chomp.split(",")
+      hash = {name: name, cohort: cohort.to_sym}
+      populate_students hash
+    end
   end
-  file.close
   puts "Loaded #{@students.count} students from #{@filename}"
 end
 
@@ -162,15 +162,15 @@ def show_students
 end
 
 def save_students
-  file = File.open(@filename, "w")
-  @students.each do |student|
-    student_data = [student[:name], student[:cohort]]
-    csv_line = student_data.join(",")
-    file.puts csv_line
+  File.open(@filename, "w") do |file|
+    @students.each do |student|
+      student_data = [student[:name], student[:cohort]]
+      csv_line = student_data.join(",")
+      file.puts csv_line
+    end
   end
-  file.close
   puts "Student data has been saved to #{@filename}"
-  exit
+  exit  
 end
 
 try_load_students
