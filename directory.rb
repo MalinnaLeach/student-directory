@@ -17,6 +17,12 @@ def try_load_students
   end
 end
 
+def ask_for_file
+  puts "Please specify a filename, or hit return for the default (#{@filename})"
+  file = STDIN.gets.chomp
+  @filename = file if !file.empty?
+end
+
 def load_students
   file = File.open(@filename, "r")
   file.readlines.each do |line|
@@ -42,8 +48,10 @@ def interactive_menu
       when "2"
         show_students
       when "3"
+        ask_for_file
         save_students
       when "4"
+        ask_for_file
         load_students
       when "9"
         exit
@@ -57,8 +65,8 @@ def print_menu
   puts
   puts "1. Input the students"
   puts "2. Show the students"
-  puts "3. Save the list to students.csv"
-  puts "4. Load the list from students.csv"
+  puts "3. Save the list to a file"
+  puts "4. Load the list from a file"
   puts "9. Exit"
 end
 
@@ -87,7 +95,8 @@ def input_students
             hash[info] = input.downcase.to_sym
             break
           else
-            puts "That is not a valid cohort name.  Please try again, or hit return for the default cohort."
+            puts "That is not a valid cohort name."
+            puts "Please try again, or hit return for the default cohort."
             input = STDIN.gets.chomp
           end
         end
@@ -141,7 +150,8 @@ end
 
 def show_students
   if @students.length > 0
-    puts "Would you like to specify a first letter?  If so, type the letter, otherwise hit return."
+    puts "Would you like to specify a first letter?"
+    puts "If so, type the letter, otherwise hit return."
     @letter = STDIN.gets.chomp
     print_header
     print_student_list
@@ -159,6 +169,8 @@ def save_students
     file.puts csv_line
   end
   file.close
+  puts "Student data has been saved to #{@filename}"
+  exit
 end
 
 try_load_students
