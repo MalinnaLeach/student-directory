@@ -5,6 +5,8 @@
 @letter = ""
 @filename = "students.csv"
 
+require 'CSV'
+
 def try_load_students
   unless ARGV.first.nil?
     @filename = ARGV.first
@@ -24,12 +26,10 @@ def ask_for_file
 end
 
 def load_students
-  File.open(@filename, "r") do |file|
-    file.readlines.each do |line|
-      name, cohort = line.chomp.split(",")
-      hash = {name: name, cohort: cohort.to_sym}
-      populate_students hash
-    end
+  CSV.foreach(@filename) do |line|
+    name, cohort = line
+    hash = {name: name, cohort: cohort.to_sym}
+    populate_students hash
   end
   puts "Loaded #{@students.count} students from #{@filename}"
 end
@@ -162,15 +162,12 @@ def show_students
 end
 
 def save_students
-  File.open(@filename, "w") do |file|
+  CSV.open(@filename, "wb") do |csv|
     @students.each do |student|
-      student_data = [student[:name], student[:cohort]]
-      csv_line = student_data.join(",")
-      file.puts csv_line
+      csv << [student[:name], student[:cohort]]
     end
   end
   puts "Student data has been saved to #{@filename}"
-  exit  
 end
 
 try_load_students
